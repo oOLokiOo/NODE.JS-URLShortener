@@ -5,6 +5,7 @@ var Ottoman    = require("ottoman");
 var ShortHash  = require("shorthash"); // https://github.com/bibig/node-shorthash
 var http       = require("http");
 //var BodyParser = require("body-parser");
+var config     = require("./config/config.js");
 
 
 // Init
@@ -14,33 +15,38 @@ app.set("port", 8080);
 app.set("view engine", "ejs");
 app.use(Express.static(__dirname + "/public"));
 
-var cluster = new Couchbase.Cluster("couchbase://localhost");
-Ottoman.bucket = cluster.openBucket("default");
+var cluster = new Couchbase.Cluster(config.db.host);
+cluster.authenticate(config.db.user, config.db.pass);
+Ottoman.bucket = cluster.openBucket(config.db.bucket);
+
+// check DB connection
+Ottoman.bucket.on("error", function (err) {
+    console.log("CONNECT ERROR:", err);
+});
+Ottoman.bucket.on("connect", function () {
+    console.log("CONNECTED to Couchbase - Successful!");
+});
 
 // TODO: connect to normal DB here!!! NOW we have - Error: cannot perform operations on a shutdown bucket
 var testDB = {
 	"Zmp3qE": "http://ya.ru/",
 	"16kevp": "http://google.com/"
 }
-//cluster.authenticate('administrator', 'adminadmin');
-/*
-Ottoman.bucket.on('error', function (err) {
-    console.log('CONNECT ERROR:', err);
-});
 
-Ottoman.bucket.on('connect', function () {
-    console.log('connected couchbase');
-});
-*/
-
-// AIzaSyB_tHW8Gk3tCQlyQQyERMIpD0uGW8Q6UwA
 var UserUrlModel = Ottoman.model("UserURL", {
-	originalURL:     {type: "string", default: ""},
-	shortUrlPublic:  {type: "string", default: ""},
-	shortUrlPrivate: {type: "string", default: ""},
-	created:         {type: 'Date', default: Date.now},
-	hash:            {type: "string", default: ""}
-});
+		originalURL:     {type: "string", default: ""},
+		shortUrlPublic:  {type: "string", default: ""},
+		shortUrlPrivate: {type: "string", default: ""},
+		created:         {type: "Date", default: Date.now},
+		hash:            {type: "string", default: ""}
+		/*users: {
+	        ip: "string",
+	        os: "string",
+	        browser: "string",
+	        region:  "string" // AIzaSyB_tHW8Gk3tCQlyQQyERMIpD0uGW8Q6UwA - google api guest key
+		}*/
+	}
+);
 
 
 // Start Server listening
@@ -84,24 +90,25 @@ app.get("/", function(req, res) {
 
 	// check if originalURL is in POST
 	if (req.query.originalURL != undefined) {
+		let hash = ShortHash.unique(req.query.originalURL + (new Date).getTime());
+
 		// setup Model
 		UserUrl.originalURL = req.query.originalURL;
-		UserUrl.shortUrlPublic = "r/" + ShortHash.unique(req.query.originalURL); // do redirect
-		UserUrl.shortUrlPrivate = "p/" + ShortHash.unique(req.query.originalURL); // show private zone
-		console.log(UserUrl);
+		UserUrl.shortUrlPublic = "r/" + hash; // url to redirect
+		UserUrl.shortUrlPrivate = "p/" + hash + "+"; // url to show private zone
+		UserUrl.hash = hash;
 
-		// add Model to DB!!!
-		/*
+		// add Model to DB
 		UserUrl.save(function(error, result) { 
 			if (error) {
 				return res.status(400).send(error);
 			}
+
 			console.log("Save successful!");
 			console.log(result);
 		});
 
 		console.log(UserUrl);
-		*/
 	}
 
 	res.render("pages/index", {

@@ -3,5 +3,22 @@
 	<footer>
 		NODE.JS - URL Shortener &copy; Ivan Volkov aka oOLokiOo
 	</footer>
+
+	<script type="text/javascript">
+	var clipboard = new Clipboard('.btn');
+
+	clipboard.on('success', function(e) {
+		/*
+		console.info('Action:', e.action);
+		console.info('Text:', e.text);
+		console.info('Trigger:', e.trigger);
+		*/
+		
+		alert("Copied!");
+
+		e.clearSelection();
+	});
+	</script>
+
 </body>
 </html>

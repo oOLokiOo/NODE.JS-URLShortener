@@ -21,7 +21,7 @@
 		<td align="left">
 			<%if (shortUrlPublic != "") { %>
 				<a href="<%= shortUrlPublic %>" target="_blank">http://localhost:8080/<%= shortUrlPublic %></a> 
-				<button onclick="alert('TODO:');">copy</button>
+				<button class="btn" data-clipboard-text="http://localhost:8080/<%= shortUrlPublic %>">copy</button>
 			<% } %>
 		</td>
 	</tr>
@@ -29,7 +29,7 @@
 		<td align="left">
 			<%if (shortUrlPrivate != "") { %>
 				<a href="<%= shortUrlPrivate %>" target="_blank">http://localhost:8080/<%= shortUrlPrivate %></a> 
-				<button onclick="alert('TODO:');">copy</button>
+				<button class="btn" data-clipboard-text="http://localhost:8080/<%= shortUrlPrivate %>">copy</button>
 			<% } %>
 		</td>
 	<tr>

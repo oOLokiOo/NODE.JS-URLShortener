@@ -4,7 +4,7 @@
 * **node.js** - core
 * **express** - framework
 * **couchbase + ottoman** - db
-* **hashids** - for hashing urls
+* **shorthash** - for hashing urls
 * **ejs** - template engine
 
 ---

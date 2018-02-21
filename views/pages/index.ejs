@@ -3,8 +3,11 @@
 <h1>Simplify your inks</h1>
 
 <form action="" method="get">
-	<input name="long_url" required placeholder="paste url here" />
+	<input name="originalURL" required placeholder="paste url here" />
 	<button type="submit">Click me</button>
 </form>
+
+<%if (originalURL != "") { %><p><a href="<%= originalURL %>" target="_blank"><%= originalURL %></a></p><% } %>
+<%if (shortUrl != "") { %><p><b" target="_blank">http://localhost:8080/<%= shortUrl %></b></p><% } %>
 
 <% include ../_footer.ejs %>

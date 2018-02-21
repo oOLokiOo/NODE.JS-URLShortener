@@ -1,0 +1,36 @@
+/* --- COMMON --- */
+html, body {
+	margin: 0;
+	padding: 0;
+	color: #000;
+	font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Geneva, Verdana, sans-serif;
+	font-size: 15px;
+	text-align: center;
+	background-color: #FFF;
+}
+
+textarea:focus, input:focus, button:focus {
+	outline: none;
+}
+
+input, button {
+	border: 1px solid #aaa;
+	padding: 10px;
+	border-radius: 10px;
+}
+
+button, input[type="submit"] {
+	cursor: pointer;
+}
+
+
+/* --- MAIN --- */
+main {
+	margin-top: 20px;
+}
+
+/* --- FOOTER --- */
+footer {
+	margin-top: 40px;
+	font-size: 10px;
+}

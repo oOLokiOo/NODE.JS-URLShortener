@@ -13,7 +13,7 @@ textarea:focus, input:focus, button:focus {
 	outline: none;
 }
 
-input, button {
+input, button, table {
 	border: 1px solid #aaa;
 	padding: 10px;
 	border-radius: 10px;
@@ -21,6 +21,10 @@ input, button {
 
 button, input[type="submit"] {
 	cursor: pointer;
+}
+
+table {
+	margin: 0 auto;
 }
 
 

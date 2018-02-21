@@ -4,10 +4,55 @@
 
 <form action="" method="get">
 	<input name="originalURL" required placeholder="paste url here" />
-	<button type="submit">Click me</button>
+	<button type="submit">SHORTEN URL</button>
 </form>
 
-<%if (originalURL != "") { %><p><a href="<%= originalURL %>" target="_blank"><%= originalURL %></a></p><% } %>
-<%if (shortUrl != "") { %><p><b" target="_blank">http://localhost:8080/<%= shortUrl %></b></p><% } %>
+<% if (originalURL != "") { %>
+<br /><br />
+<table>
+	<tr>
+		<td align="left">
+			<%if (originalURL != "") { %>
+				<a href="<%= originalURL %>" target="_blank"><%= originalURL %></a>
+			<% } %>
+		</td>
+	</tr>
+	<tr>
+		<td align="left">
+			<%if (shortUrlPublic != "") { %>
+				<a href="<%= shortUrlPublic %>" target="_blank">http://localhost:8080/<%= shortUrlPublic %></a> 
+				<button onclick="alert('TODO:');">copy</button>
+			<% } %>
+		</td>
+	</tr>
+	<tr>
+		<td align="left">
+			<%if (shortUrlPrivate != "") { %>
+				<a href="<%= shortUrlPrivate %>" target="_blank">http://localhost:8080/<%= shortUrlPrivate %></a> 
+				<button onclick="alert('TODO:');">copy</button>
+			<% } %>
+		</td>
+	<tr>
+</table>
+<% } %>
+
+<br /><br />
+<table>
+	<thead>
+		<tr>
+			<td>Original URL | </td>
+			<td>Short URL | </td>
+			<td>Created | </td>
+			<td>All Clicks</td>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td colspan="4">
+				0 records founded...
+			</td>
+		</tr>
+	</tbody>
+</table>
 
 <% include ../_footer.ejs %>

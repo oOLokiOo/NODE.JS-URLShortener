@@ -3,6 +3,8 @@ var Express    = require("express");
 var Couchbase  = require("couchbase");
 var Ottoman    = require("ottoman");
 var ShortHash  = require("shorthash"); // https://github.com/bibig/node-shorthash
+var UserAgent  = require("express-useragent"); // https://github.com/biggora/express-useragent
+var requestIp  = require("request-ip");
 var http       = require("http");
 //var BodyParser = require("body-parser");
 var config     = require("./config/config.js");
@@ -13,6 +15,9 @@ var app = Express();
 
 app.set("port", 8080);
 app.set("view engine", "ejs");
+
+app.use(UserAgent.express());
+app.use(requestIp.mw());
 app.use(Express.static(__dirname + "/public"));
 
 var cluster = new Couchbase.Cluster(config.db.host);
@@ -38,13 +43,23 @@ var UserUrlModel = Ottoman.model("UserURL", {
 		shortUrlPublic:  {type: "string", default: ""},
 		shortUrlPrivate: {type: "string", default: ""},
 		created:         {type: "Date", default: Date.now},
-		hash:            {type: "string", default: ""}
-		/*users: {
-	        ip: "string",
-	        os: "string",
-	        browser: "string",
-	        region:  "string" // AIzaSyB_tHW8Gk3tCQlyQQyERMIpD0uGW8Q6UwA - google api guest key
-		}*/
+		hash:            {type: "string", default: ""}, // readonly: true
+		users: {
+	        ip: {type: "string", default: ""},
+	        os: {type: "string", default: ""},
+	        browser: {type: "string", default: ""},
+	        region:  {type: "string", default: ""} // AIzaSyB_tHW8Gk3tCQlyQQyERMIpD0uGW8Q6UwA - google api guest key
+		}
+	}, {
+		///*
+		index: {
+			findByHash: {
+				by: "hash",
+				type: "string"
+			}
+		}
+		//*/
+		//id: "hash"
 	}
 );
 
@@ -64,7 +79,7 @@ app.get("/r/:hash", function(req, res, next) {
 	// TODO:: redirect to originalURL here, by hash from normal DB !!!
 	if (testDB[req.params.hash] != undefined) {
 		res.writeHead(302,
-			{ Location: testDB[req.params.hash] }
+			{Location: testDB[req.params.hash]}
 		);
 		res.end();
 	} else {
@@ -75,8 +90,6 @@ app.get("/r/:hash", function(req, res, next) {
 app.get("/p/:hash", function(req, res, next) {
 	// TODO:: check for hash from normal DB !!!
 	if (testDB[req.params.hash] != undefined) {
-
-
 		res.render("pages/private", {
 			// put some variables for template here
 		});
@@ -93,13 +106,16 @@ app.get("/", function(req, res) {
 		let hash = ShortHash.unique(req.query.originalURL + (new Date).getTime());
 
 		// setup Model
-		UserUrl.originalURL = req.query.originalURL;
-		UserUrl.shortUrlPublic = "r/" + hash; // url to redirect
+		UserUrl.originalURL     = req.query.originalURL;
+		UserUrl.shortUrlPublic  = "r/" + hash; // url to redirect
 		UserUrl.shortUrlPrivate = "p/" + hash + "+"; // url to show private zone
-		UserUrl.hash = hash;
+		UserUrl.hash            = hash;
+		UserUrl.users.ip        = requestIp.getClientIp(req);
+		UserUrl.users.os        = req.useragent.os;
+		UserUrl.users.browser   = req.useragent.browser + " " + req.useragent.version;
 
 		// add Model to DB
-		UserUrl.save(function(error, result) { 
+		UserUrl.save(function(error, result) {
 			if (error) {
 				return res.status(400).send(error);
 			}

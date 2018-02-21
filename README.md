@@ -5,6 +5,7 @@
 * **express** - framework
 * **couchbase + ottoman** - db
 * **shorthash** - for hashing urls
+* **express-useragent** - for useragent info (os, browser)
 * **ejs** - template engine
 
 ---

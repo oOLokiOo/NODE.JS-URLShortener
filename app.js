@@ -118,14 +118,6 @@ app.get("/p/:hash", function(req, res, next) {
 
 app.get("/", function(req, res) {
 	var UserUrl = new UserUrlModel();
-	// TODO: get all Documents
-	/*
-		UserUrlModel.find({}, function(error, data) {
-		if (error) return res.status(400).send(error);
-
-		AllUserUrls = data;
-	});
-	*/
 
 	// check if originalURL is in POST
 	if (req.query.originalURL != undefined) {

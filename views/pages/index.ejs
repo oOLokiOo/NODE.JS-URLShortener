@@ -60,7 +60,7 @@
 						http://localhost:8080/<%= AllUserUrls[i].shortUrlPublic %>
 					</a>
 				</td>
-				<td><%= AllUserUrls[i].created.toLocaleTimeString() %></td>
+				<td><%= AllUserUrls[i].created.toLocaleDateString().replace(/-/g, ".") %> in <%= AllUserUrls[i].created.toLocaleTimeString() %></td>
 				<td><%= AllUserUrls[i].users[0]["clicks"] %></td>
 			</tr>
 			<% } %>

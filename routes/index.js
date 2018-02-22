@@ -28,7 +28,10 @@ module.exports = function(app) {
 				UserUrl[0]["users"][0]["clicks"]++;
 
 				// add Model to DB
-				//UserUrl.save(function(error, result){});
+				UserUrl[0].save(function(error, result) {
+					if (error) return res.status(400).send(error);
+					console.log("Save successful!");
+				});
 
 				doRedirect(res, redirectUrl);
 			} else {

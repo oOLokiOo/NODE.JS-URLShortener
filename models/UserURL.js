@@ -25,8 +25,6 @@ var UserUrlModel = Ottoman.model("UserURL", {
 // Ottoman.ensureIndices(function(){});
 
 
-//UserUrlModel.prepareId = function() {}
-//UserUrlModel.save = function() {}
 //UserUrlModel.updateClicks() {};
 
 module.exports = UserUrlModel;

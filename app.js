@@ -19,7 +19,7 @@ app.set("port", 8080);
 app.use(UserAgent.express());
 app.use(RequestIp.mw());
 
-app.set("view engine", "ejs"); //TODO: remove tables & add bootstrap to templates!!!
+app.set("view engine", "ejs"); //TODO: remove tables & add bootstrap to templates! http://localhost:8080/ - to Config!
 app.use(Express.static(__dirname + "/public"));
 
 app.use(BodyParser.json());
@@ -162,13 +162,19 @@ app.get("/", function(req, res) {
 
 			res.render("pages/index", {
 				// put some variables for template here
-				UserUrl: UserUrl
+				UserUrl: UserUrl,
+				AllUserUrls: {}
 			});
 		});
 	} else {
-		res.render("pages/index", {
-			// put some variables for template here
-			UserUrl: UserUrl
+		UserUrlModel.find({}, function(error, data) {
+			if (error) return res.status(400).send(error);
+
+			res.render("pages/index", {
+				// put some variables for template here
+				UserUrl: UserUrl,
+				AllUserUrls: data
+			});
 		});
 	}
 });

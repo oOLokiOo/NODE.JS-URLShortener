@@ -47,11 +47,26 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr>
-			<td colspan="4">
-				0 records founded...
-			</td>
-		</tr>
+		<% if (AllUserUrls != undefined && AllUserUrls.length > 0) { %>
+			<% for (var i = 0; i < AllUserUrls.length; i++) { %>
+			<tr>
+				<td>
+					<a href="<%= AllUserUrls[i].originalURL %>" target="_blank">
+						<%= AllUserUrls[i].originalURL.slice(0, 30) %>...
+					</a>
+				</td>
+				<td>
+					<a href="http://localhost:8080/<%= AllUserUrls[i].shortUrlPublic %>" target="_blank">
+						http://localhost:8080/<%= AllUserUrls[i].shortUrlPublic %>
+					</a>
+				</td>
+				<td><%= AllUserUrls[i].created.toLocaleTimeString() %></td>
+				<td><%= AllUserUrls[i].users[0]["clicks"] %></td>
+			</tr>
+			<% } %>
+		<% } else { %>
+			<tr><td colspan="4">0 records founded...</td></tr>
+		<% } %>
 	</tbody>
 </table>
 

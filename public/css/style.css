@@ -27,6 +27,14 @@ table {
 	margin: 0 auto;
 }
 
+.user-list {
+	width: 60%;
+	font-size: 12px;
+}
+.user-list td, .user-list th {
+	text-align: left;
+}
+
 
 /* --- MAIN --- */
 main {

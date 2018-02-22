@@ -1,13 +1,40 @@
 <% include ../_header.ejs %>
 
-<h1>User private ink zone</h1>
+<h1>User private link zone</h1>
 
-<p>CREATED: %created%</p>
-<p>%originalURL%</p>
-<p>%shortUrlPublic% <button onclick="alert('TODO:');">copy</button></p>
-
+<p>CREATED: <%= UserUrl["created"] %></p>
+<p><a href="<%= UserUrl["originalURL"] %>" target="_blank"><%= UserUrl["originalURL"] %></a></p>
 <p>
-	%CLICK_STATISTIC_GRAPH%
+	<a href="http://localhost:8080/<%= UserUrl["shortUrlPublic"] %>" target="_blank">http://localhost:8080/<%= UserUrl["shortUrlPublic"] %></a> 
+	<button class="btn" data-clipboard-text="http://localhost:8080/<%= UserUrl["shortUrlPublic"] %>">copy</button>
 </p>
+
+<br />
+<hr width="60%">
+<br />
+
+<table class="user-list">
+	<thead>
+		<tr>
+			<th>IP</th>
+			<th>OS</th>
+			<th>BROWSER</th>
+			<th>REGION</th>
+			<th>CLICKS</th>
+		</tr>
+	</thead>
+	<tbody>
+	<% for (var i = 0; i < UserUrl.users.length; i++) { %>
+	<tr>
+		<td><%= UserUrl.users[0]["ip"] %></td>
+		<td><%= UserUrl.users[0]["os"] %></td>
+		<td><%= UserUrl.users[0]["browser"] %></td>
+		<td><%= UserUrl.users[0]["region"] %></td>
+		<td><%= UserUrl.users[0]["clicks"] %></td>
+		</td>
+	</tr>
+	<% } %>
+	</tbody>
+</table>
 
 <% include ../_footer.ejs %>

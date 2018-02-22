@@ -24,6 +24,7 @@ var UserUrlModel = Ottoman.model("UserURL", {
 );
 
 //UserUrlModel.save = function(){}
+//UserUrlModel.findAll = function(){};
 //UserUrlModel.findByHash = function(){};
 //UserUrlModel.updateClicks(){};
 

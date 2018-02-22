@@ -7,29 +7,29 @@
 	<button type="submit">SHORTEN URL</button>
 </form>
 
-<% if (originalURL != "") { %>
+<% if (UserUrl.originalURL != "") { %>
 <br /><br />
 <table>
 	<tr>
 		<td align="left">
-			<%if (originalURL != "") { %>
-				<a href="<%= originalURL %>" target="_blank"><%= originalURL %></a>
+			<%if (UserUrl.originalURL != "") { %>
+				<a href="<%= UserUrl.originalURL %>" target="_blank"><%= UserUrl.originalURL %></a>
 			<% } %>
 		</td>
 	</tr>
 	<tr>
 		<td align="left">
-			<%if (shortUrlPublic != "") { %>
-				<a href="<%= shortUrlPublic %>" target="_blank">http://localhost:8080/<%= shortUrlPublic %></a> 
-				<button class="btn" data-clipboard-text="http://localhost:8080/<%= shortUrlPublic %>">copy</button>
+			<%if (UserUrl.shortUrlPublic != "") { %>
+				<a href="<%= UserUrl.shortUrlPublic %>" target="_blank">http://localhost:8080/<%= UserUrl.shortUrlPublic %></a> 
+				<button class="btn" data-clipboard-text="http://localhost:8080/<%= UserUrl.shortUrlPublic %>">copy</button>
 			<% } %>
 		</td>
 	</tr>
 	<tr>
 		<td align="left">
-			<%if (shortUrlPrivate != "") { %>
-				<a href="<%= shortUrlPrivate %>" target="_blank">http://localhost:8080/<%= shortUrlPrivate %></a> 
-				<button class="btn" data-clipboard-text="http://localhost:8080/<%= shortUrlPrivate %>">copy</button>
+			<%if (UserUrl.shortUrlPrivate != "") { %>
+				<a href="<%= UserUrl.shortUrlPrivate %>" target="_blank">http://localhost:8080/<%= UserUrl.shortUrlPrivate %></a> 
+				<button class="btn" data-clipboard-text="http://localhost:8080/<%= UserUrl.shortUrlPrivate %>">copy</button>
 			<% } %>
 		</td>
 	<tr>

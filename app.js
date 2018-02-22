@@ -83,6 +83,12 @@ app.get("/r/:hash", function(req, res, next) {
 		let redirectUrl = (UserUrl[0] != undefined ? UserUrl[0]["originalURL"] : "");
 
 		if (redirectUrl != "") {
+			// update link clicks
+			UserUrl[0]["users"][0]["clicks"]++;
+
+			// add Model to DB
+			//UserUrl.save(function(error, result){});
+
 			res.writeHead(302, { Location: redirectUrl });
 			res.end();
 		} else {
@@ -111,49 +117,60 @@ app.get("/p/:hash", function(req, res, next) {
 });
 
 app.get("/", function(req, res) {
-	let UserUrl = new UserUrlModel();
+	var UserUrl = new UserUrlModel();
+	// TODO: get all Documents
+	/*
+		UserUrlModel.find({}, function(error, data) {
+		if (error) return res.status(400).send(error);
+
+		AllUserUrls = data;
+	});
+	*/
 
 	// check if originalURL is in POST
 	if (req.query.originalURL != undefined) {
 		var region = "unknown";
-		let hash = ShortHash.unique(req.query.originalURL + (new Date).getTime());
-		let ip = (Config.localTestMode == true ? "178.168."+((Math.floor(Math.random() * (176 - 128)) + 128)+".0") : RequestIp.getClientIp(req)); // Just for Local tests
+		var hash = ShortHash.unique(req.query.originalURL + (new Date).getTime());
+		var ip = (Config.localTestMode == true ? "178.168."+((Math.floor(Math.random() * (176 - 128)) + 128)+".0") : RequestIp.getClientIp(req)); // Just for Local tests
 
-		WhereRegion.is(ip, function(err, result) {
+		WhereRegion.is(ip, function (err, result) {
 			if (result) {
 				region = (result.get("country") + " ("+result.get("countryCode")+")");
 			}
+
+			// setup Model for save
+			UserUrl.originalURL     = req.query.originalURL;
+			UserUrl.shortUrlPublic  = "r/" + hash; // url to redirect
+			UserUrl.shortUrlPrivate = "p/" + hash + "+"; // url to show private zone
+			UserUrl.hash            = hash;
+			UserUrl.users[0] = {
+				"ip": ip,
+				"os": req.useragent.os,
+				"browser": req.useragent.browser + " " + req.useragent.version,
+				"region": region,
+				"clicks": 0
+			};
+
+			// add Model to DB
+			UserUrl.save(function(error, result) {
+				if (error) return res.status(400).send(error);
+
+				console.log("Save successful!");
+			});
+
+			console.log(UserUrl);
+
+			res.render("pages/index", {
+				// put some variables for template here
+				UserUrl: UserUrl
+			});
 		});
-
-		// setup Model for save
-		UserUrl.originalURL     = req.query.originalURL;
-		UserUrl.shortUrlPublic  = "r/" + hash; // url to redirect
-		UserUrl.shortUrlPrivate = "p/" + hash + "+"; // url to show private zone
-		UserUrl.hash            = hash;
-		UserUrl.users[0] = {
-			"ip": ip,
-			"os": req.useragent.os,
-			"browser": req.useragent.browser + " " + req.useragent.version,
-			"region": region
-		};
-
-		// add Model to DB
-		UserUrl.save(function(error, result) {
-			if (error) return res.status(400).send(error);
-
-			console.log("Save successful!");
-			console.log(result);
+	} else {
+		res.render("pages/index", {
+			// put some variables for template here
+			UserUrl: UserUrl
 		});
-
-		console.log(UserUrl);
 	}
-
-	res.render("pages/index", {
-		// put some variables for template here
-		originalURL:     UserUrl.originalURL,
-		shortUrlPublic:  UserUrl.shortUrlPublic,
-		shortUrlPrivate: UserUrl.shortUrlPrivate
-	});
 });
 
 app.use(function(req, res) {

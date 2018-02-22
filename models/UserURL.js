@@ -1,12 +1,12 @@
 Ottoman = require("ottoman");
 
-// UserUrl model schema
+// UserUrl model Schema
 var UserUrlModel = Ottoman.model("UserURL", {
 		originalURL:     {type: "string", default: ""},
 		shortUrlPublic:  {type: "string", default: ""},
 		shortUrlPrivate: {type: "string", default: ""},
 		created:         {type: "Date", default: Date.now},
-		hash:            {type: "string", default: ""}, // readonly: true
+		hash:            {type: "string", default: ""},
 		users: [{
 	        ip: {type: "string", default: ""},
 	        os: {type: "string", default: ""},
@@ -22,10 +22,11 @@ var UserUrlModel = Ottoman.model("UserURL", {
 		}
 	}
 );
+// Ottoman.ensureIndices(function(){});
 
-//UserUrlModel.save = function(){}
-//UserUrlModel.findAll = function(){};
-//UserUrlModel.findByHash = function(){};
-//UserUrlModel.updateClicks(){};
+
+//UserUrlModel.prepareId = function() {}
+//UserUrlModel.save = function() {}
+//UserUrlModel.updateClicks() {};
 
 module.exports = UserUrlModel;

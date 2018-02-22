@@ -3,6 +3,7 @@ Config.db  = {};
 Config.mdb = {};
 
 // Couchbase
+// http://127.0.0.1:8091/ui/index.html#!/buckets/documents?bucket=UserUrl&pageLimit=10&pageNumber=0
 Config.db.host   = "couchbase://localhost";
 Config.db.bucket = "UserUrl";
 Config.db.user   = "Administrator";
@@ -21,6 +22,7 @@ Config.mdb.user   = "Administrator";
 Config.mdb.pass   = "Administrator";
 
 // Common
+Config.httpUrl = "http://localhost:8080/";
 Config.localTestMode = true;
 
 module.exports = Config;

@@ -7,7 +7,7 @@
 	<button type="submit">SHORTEN URL</button>
 </form>
 
-<% if (UserUrl.originalURL != "") { %>
+<% if (typeof UserUrl != "undefined" && UserUrl.originalURL != "") { %>
 <br /><br />
 <table>
 	<tr>
@@ -20,16 +20,16 @@
 	<tr>
 		<td align="left">
 			<%if (UserUrl.shortUrlPublic != "") { %>
-				<a href="<%= UserUrl.shortUrlPublic %>" target="_blank">http://localhost:8080/<%= UserUrl.shortUrlPublic %></a> 
-				<button class="btn" data-clipboard-text="http://localhost:8080/<%= UserUrl.shortUrlPublic %>">copy</button>
+				<a href="<%= UserUrl.shortUrlPublic %>" target="_blank"><%= HttpUrl %><%= UserUrl.shortUrlPublic %></a> 
+				<button class="btn" data-clipboard-text="<%= HttpUrl %><%= UserUrl.shortUrlPublic %>">copy</button>
 			<% } %>
 		</td>
 	</tr>
 	<tr>
 		<td align="left">
 			<%if (UserUrl.shortUrlPrivate != "") { %>
-				<a href="<%= UserUrl.shortUrlPrivate %>" target="_blank">http://localhost:8080/<%= UserUrl.shortUrlPrivate %></a> 
-				<button class="btn" data-clipboard-text="http://localhost:8080/<%= UserUrl.shortUrlPrivate %>">copy</button>
+				<a href="<%= UserUrl.shortUrlPrivate %>" target="_blank"><%= HttpUrl %><%= UserUrl.shortUrlPrivate %></a> 
+				<button class="btn" data-clipboard-text="<%= HttpUrl %><%= UserUrl.shortUrlPrivate %>">copy</button>
 			<% } %>
 		</td>
 	<tr>
@@ -47,7 +47,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<% if (AllUserUrls != undefined && AllUserUrls.length > 0) { %>
+		<% if (typeof AllUserUrls != "undefined" && AllUserUrls.length > 0) { %>
 			<% for (var i = 0; i < AllUserUrls.length; i++) { %>
 			<tr>
 				<td>
@@ -56,8 +56,8 @@
 					</a>
 				</td>
 				<td>
-					<a href="http://localhost:8080/<%= AllUserUrls[i].shortUrlPublic %>" target="_blank">
-						http://localhost:8080/<%= AllUserUrls[i].shortUrlPublic %>
+					<a href="<%= HttpUrl %><%= AllUserUrls[i].shortUrlPublic %>" target="_blank">
+						<%= HttpUrl %><%= AllUserUrls[i].shortUrlPublic %>
 					</a>
 				</td>
 				<td><%= AllUserUrls[i].created.toLocaleDateString().replace(/-/g, ".") %> in <%= AllUserUrls[i].created.toLocaleTimeString() %></td>

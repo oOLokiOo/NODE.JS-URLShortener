@@ -2,11 +2,13 @@
 
 <h1>User private link zone</h1>
 
+<% if (typeof UserUrl != "undefined") { %>
+
 <p>CREATED: <%= UserUrl["created"] %></p>
 <p><a href="<%= UserUrl["originalURL"] %>" target="_blank"><%= UserUrl["originalURL"] %></a></p>
 <p>
-	<a href="http://localhost:8080/<%= UserUrl["shortUrlPublic"] %>" target="_blank">http://localhost:8080/<%= UserUrl["shortUrlPublic"] %></a> 
-	<button class="btn" data-clipboard-text="http://localhost:8080/<%= UserUrl["shortUrlPublic"] %>">copy</button>
+	<a href="<%= HttpUrl %><%= UserUrl["shortUrlPublic"] %>" target="_blank"><%= HttpUrl %><%= UserUrl["shortUrlPublic"] %></a> 
+	<button class="btn" data-clipboard-text="<%= HttpUrl %><%= UserUrl["shortUrlPublic"] %>">copy</button>
 </p>
 
 <br />
@@ -36,5 +38,7 @@
 	<% } %>
 	</tbody>
 </table>
+
+<% } %>
 
 <% include ../_footer.ejs %>

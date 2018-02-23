@@ -61,7 +61,7 @@
 					</a>
 				</td>
 				<td><%= AllUserUrls[i].created.toLocaleDateString().replace(/-/g, ".") %> in <%= AllUserUrls[i].created.toLocaleTimeString() %></td>
-				<td><%= AllUserUrls[i].users[0]["clicks"] %></td>
+				<td><%= AllUserUrls[i]["clicksSum"] %></td>
 			</tr>
 			<% } %>
 		<% } else { %>

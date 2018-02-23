@@ -28,11 +28,11 @@
 	<tbody>
 	<% for (var i = 0; i < UserUrl.users.length; i++) { %>
 	<tr>
-		<td><%= UserUrl.users[0]["ip"] %></td>
-		<td><%= UserUrl.users[0]["os"] %></td>
-		<td><%= UserUrl.users[0]["browser"] %></td>
-		<td><%= UserUrl.users[0]["region"] %></td>
-		<td><%= UserUrl.users[0]["clicks"] %></td>
+		<td><%= UserUrl.users[i]["ip"] %></td>
+		<td><%= UserUrl.users[i]["os"] %></td>
+		<td><%= UserUrl.users[i]["browser"] %></td>
+		<td><%= UserUrl.users[i]["region"] %></td>
+		<td><%= UserUrl.users[i]["clicks"] %></td>
 		</td>
 	</tr>
 	<% } %>

@@ -24,13 +24,30 @@ module.exports = function(app) {
 			let redirectUrl = (UserUrl[0] != undefined ? UserUrl[0]["originalURL"] : "");
 
 			if (redirectUrl != "") {
-				// update link clicks
-				UserUrl[0]["users"][0]["clicks"]++;
+				// check for already clicked users
+				let ip = UserUrlModel.getClientIp();
+				let userId = UserUrlModel.checkIfUsersClicked(UserUrl[0], ip);
 
-				// add Model to DB
-				UserUrl[0].save(function(error, result) {
-					if (error) return res.status(400).send(error);
-					console.log("Save successful!");
+				WhereRegion.is(ip, function (err, result) {
+					if (result) region = (result.get("country") + " ("+result.get("countryCode")+")");
+
+					if (userId > 0) UserUrl[0]["users"][userId]["clicks"]++;
+					else {
+						// attach new user to link
+						UserUrl[0].users.push({
+							"ip": ip,
+							"os": req.useragent.os,
+							"browser": req.useragent.browser + " " + req.useragent.version,
+							"region": region,
+							"clicks": 1
+						});
+					}
+
+					// add Model to DB
+					UserUrl[0].save(function(error, result) {
+						if (error) return res.status(400).send(error);
+						console.log("Save successful!");
+					});
 				});
 
 				doRedirect(res, redirectUrl);
@@ -48,10 +65,7 @@ module.exports = function(app) {
 			if (error) return res.status(400).send(error);
 
 			if (UserUrl[0] != undefined) {
-				// convert CREATED date to custom format
-				UserUrl[0]["created"] = UserUrl[0]["created"].toLocaleDateString().replace(/-/g, ".") 
-					+ " in " 
-					+ UserUrl[0]["created"].toLocaleTimeString();
+				UserUrl[0]["created"] = UserUrlModel.dateToCustomFormat(UserUrl[0]);
 
 				res.render("pages/private", {
 					UserUrl: UserUrl[0],
@@ -69,21 +83,18 @@ module.exports = function(app) {
 		// get all short links
 		UserUrlModel.find({}, function(error, AllUserUrls) {
 			if (error) return res.status(400).send(error);
-
-			// check if original URL exists in POST
+			
+			AllUserUrls = UserUrlModel.getSumUrlClicks(AllUserUrls);
+			
+			// check if original URL exists in POST action
 			if (req.query.originalURL != undefined) {
 				var region = "unknown";
 				var hash = ShortHash.unique(req.query.originalURL + (new Date).getTime());
-				// convert IP to custom format (just for local tests)
-				var ip = (Config.localTestMode == true 
-					? "178.168."+((Math.floor(Math.random() * (176 - 128)) + 128)+".0") 
-					: RequestIp.getClientIp(req));
+				var ip = UserUrlModel.getClientIp();
 				
 				// get region by ip
 				WhereRegion.is(ip, function (err, result) {
-					if (result) {
-						region = (result.get("country") + " ("+result.get("countryCode")+")");
-					}
+					if (result) region = (result.get("country") + " ("+result.get("countryCode")+")");
 
 					// setup Model for save
 					UserUrl.originalURL     = req.query.originalURL;

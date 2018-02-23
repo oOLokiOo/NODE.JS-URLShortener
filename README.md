@@ -11,4 +11,14 @@
 
 ---
 
+**Some Screenshots**<br />
+http://joxi.ru/5mdkNq5fvWz7kr - home page<br />
+http://joxi.ru/52a1NlEcGoz5g2 - shorten url<br />
+http://joxi.ru/BA0dnoNtB3DQYA - private url in details (new)<br />
+http://joxi.ru/Dr8KWMjtka8gaA - private url in details (with click)<br />
+http://joxi.ru/D2PjVLGTdP5Pkr - "copy url" functional<br />
+http://joxi.ru/Y2Ljp5BTnP55Gr - db buckets list<br />
+http://joxi.ru/Y2Ljp5BTnP5PGr - db bucket in details<br />
+
+
 _TODO: add description here..._

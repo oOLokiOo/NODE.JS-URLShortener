@@ -29,7 +29,7 @@ var UserUrlModel = Ottoman.model("UserURL", {
 
 UserUrlModel.getClientIp = function() {
 	return (Config.localTestMode == true 
-		? "178.168."+((Math.floor(Math.random() * (176 - 168)) + 168)+".0") 
+		? "178.168."+((Math.floor(Math.random() * (176 - 128)) + 128)+".0") 
 		: RequestIp.getClientIp(req));
 }
 

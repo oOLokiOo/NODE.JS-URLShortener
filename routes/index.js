@@ -88,44 +88,51 @@ module.exports = function(app) {
 		UserUrlModel.find({}, function(error, allUserUrls) {
 			if (error) return res.status(400).send(error);
 
-			var userUrl = new UserUrlModel();
+			let userUrl = new UserUrlModel();
 			allUserUrls = UserUrlModel.getSumUrlClicks(allUserUrls);
 
+			let renderPage = function() {
+				res.render("pages/index", {
+					userUrl: userUrl,
+					allUserUrls: allUserUrls,
+					httpUrl: Config.httpUrl
+				})
+			};
+
 			// check if original URL exists in POST action
-			if (req.query.originalURL != undefined) {
-				let region = "unknown";
-				let hash = ShortHash.unique(req.query.originalURL + (new Date).getTime());
-				let ip = UserUrlModel.getClientIp();
-
-				// get region by ip
-				WhereRegion.is(ip, function (err, result) {
-					if (result) region = (result.get("country") + " ("+result.get("countryCode")+")");
-
-					// setup Model for save
-					userUrl.originalURL     = req.query.originalURL;
-					userUrl.shortUrlPublic  = "r/" + hash; // url to redirect
-					userUrl.shortUrlPrivate = "p/" + hash + "+"; // url to show private zone
-					userUrl.hash            = hash;
-					userUrl.users[0] = { // attach first user to link (who created the link)
-						"ip": ip,
-						"os": req.useragent.os,
-						"browser": req.useragent.browser + " " + req.useragent.version,
-						"region": region,
-						"clicks": 0
-					};
-
-					// add Model to DB
-					userUrl.save(function(error, result) {
-						if (error) return res.status(400).send(error);
-						console.log("Save successful!");
-					});
-				});
+			if (req.query.originalURL == undefined) {
+				renderPage();
+				return;
 			}
 
-			res.render("pages/index", {
-				userUrl: userUrl,
-				allUserUrls: allUserUrls,
-				httpUrl: Config.httpUrl
+			// prepare Model for save
+			let region = "unknown";
+			let hash = ShortHash.unique(req.query.originalURL + (new Date).getTime());
+			let ip = UserUrlModel.getClientIp();
+
+			// get region by ip
+			WhereRegion.is(ip, function (err, result) {
+				if (result) region = (result.get("country") + " ("+result.get("countryCode")+")");
+
+				userUrl.originalURL     = req.query.originalURL;
+				userUrl.shortUrlPublic  = "r/" + hash; // url to redirect
+				userUrl.shortUrlPrivate = "p/" + hash + "+"; // url to show private zone
+				userUrl.hash            = hash;
+				userUrl.users[0] = { // attach first user to link (user who created the link)
+					"ip": ip,
+					"os": req.useragent.os,
+					"browser": req.useragent.browser + " " + req.useragent.version,
+					"region": region,
+					"clicks": 0
+				};
+
+				// add Model to DB
+				userUrl.save(function(error, result) {
+					if (error) return res.status(400).send(error);
+					console.log("Save successful!");
+
+					renderPage();
+				});
 			});
 		});
 	});

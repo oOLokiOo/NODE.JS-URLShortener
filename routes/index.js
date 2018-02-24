@@ -1,5 +1,5 @@
-var UserUrlModel = require("../models/UserUrl"),
-	UserUrl      = new UserUrlModel(),
+var	UserUrlModel = require("../models/UserUrl"),
+	//userUrl      = new UserUrlModel(),
 	Config       = require("../config"),
 	ShortHash    = require("shorthash"), // https://github.com/bibig/node-shorthash
 	WhereRegion  = require("node-where"); // https://github.com/venables/node-where
@@ -18,23 +18,25 @@ function doRedirect(res, url) {
 module.exports = function(app) {
 	// redirect from short link to original
 	app.get("/r/:hash", function(req, res, next) {
-		UserUrlModel.findByHash(req.params.hash, function(error, UserUrl) {
+		UserUrlModel.findByHash(req.params.hash, function(error, userUrl) {
 			if (error) return res.status(400).send(error);
 
-			let redirectUrl = (UserUrl[0] != undefined ? UserUrl[0]["originalURL"] : "");
+			var userUrl = userUrl[0];
+			let redirectUrl = (userUrl != undefined ? userUrl["originalURL"] : "");
 
+			// do action if hash exists in db
 			if (redirectUrl != "") {
 				// check for already clicked users
 				let ip = UserUrlModel.getClientIp();
-				let userId = UserUrlModel.checkIfUsersClicked(UserUrl[0], ip);
+				let userId = UserUrlModel.checkIfUsersClicked(userUrl, ip);
 
 				WhereRegion.is(ip, function (err, result) {
 					if (result) region = (result.get("country") + " ("+result.get("countryCode")+")");
 
-					if (userId > 0) UserUrl[0]["users"][userId]["clicks"]++;
+					if (userId > 0) userUrl["users"][userId]["clicks"]++;
 					else {
 						// attach new user to link
-						UserUrl[0].users.push({
+						userUrl.users.push({
 							"ip": ip,
 							"os": req.useragent.os,
 							"browser": req.useragent.browser + " " + req.useragent.version,
@@ -44,7 +46,7 @@ module.exports = function(app) {
 					}
 
 					// add Model to DB
-					UserUrl[0].save(function(error, result) {
+					userUrl.save(function(error, result) {
 						if (error) return res.status(400).send(error);
 						console.log("Save successful!");
 					});
@@ -61,15 +63,17 @@ module.exports = function(app) {
 	// show private link in details
 	app.get("/p/:hash", function(req, res, next) {
 		// slice last symbol "+" in private link
-		UserUrlModel.findByHash(req.params.hash.slice(0, - 1), function(error, UserUrl) {
+		UserUrlModel.findByHash(req.params.hash.slice(0, - 1), function(error, userUrl) {
 			if (error) return res.status(400).send(error);
 
-			if (UserUrl[0] != undefined) {
-				UserUrl[0]["created"] = UserUrlModel.dateToCustomFormat(UserUrl[0]);
+			var userUrl = userUrl[0];
+
+			if (userUrl != undefined) {
+				userUrl["created"] = UserUrlModel.dateToCustomFormat(userUrl);
 
 				res.render("pages/private", {
-					UserUrl: UserUrl[0],
-					HttpUrl: Config.httpUrl
+					userUrl: userUrl,
+					httpUrl: Config.httpUrl
 				});
 			} else {
 				next();
@@ -80,28 +84,29 @@ module.exports = function(app) {
 
 	// show home page 
 	app.get("/", function(req, res, next) {
-		// get all short links
-		UserUrlModel.find({}, function(error, AllUserUrls) {
+		// get all short links for main table list
+		UserUrlModel.find({}, function(error, allUserUrls) {
 			if (error) return res.status(400).send(error);
-			
-			AllUserUrls = UserUrlModel.getSumUrlClicks(AllUserUrls);
-			
+
+			var userUrl = new UserUrlModel();
+			allUserUrls = UserUrlModel.getSumUrlClicks(allUserUrls);
+
 			// check if original URL exists in POST action
 			if (req.query.originalURL != undefined) {
-				var region = "unknown";
-				var hash = ShortHash.unique(req.query.originalURL + (new Date).getTime());
-				var ip = UserUrlModel.getClientIp();
-				
+				let region = "unknown";
+				let hash = ShortHash.unique(req.query.originalURL + (new Date).getTime());
+				let ip = UserUrlModel.getClientIp();
+
 				// get region by ip
 				WhereRegion.is(ip, function (err, result) {
 					if (result) region = (result.get("country") + " ("+result.get("countryCode")+")");
 
 					// setup Model for save
-					UserUrl.originalURL     = req.query.originalURL;
-					UserUrl.shortUrlPublic  = "r/" + hash; // url to redirect
-					UserUrl.shortUrlPrivate = "p/" + hash + "+"; // url to show private zone
-					UserUrl.hash            = hash;
-					UserUrl.users[0] = {
+					userUrl.originalURL     = req.query.originalURL;
+					userUrl.shortUrlPublic  = "r/" + hash; // url to redirect
+					userUrl.shortUrlPrivate = "p/" + hash + "+"; // url to show private zone
+					userUrl.hash            = hash;
+					userUrl.users[0] = { // attach first user to link (who created the link)
 						"ip": ip,
 						"os": req.useragent.os,
 						"browser": req.useragent.browser + " " + req.useragent.version,
@@ -110,7 +115,7 @@ module.exports = function(app) {
 					};
 
 					// add Model to DB
-					UserUrl.save(function(error, result) {
+					userUrl.save(function(error, result) {
 						if (error) return res.status(400).send(error);
 						console.log("Save successful!");
 					});
@@ -118,9 +123,9 @@ module.exports = function(app) {
 			}
 
 			res.render("pages/index", {
-				UserUrl: UserUrl,
-				AllUserUrls: AllUserUrls,
-				HttpUrl: Config.httpUrl
+				userUrl: userUrl,
+				allUserUrls: allUserUrls,
+				httpUrl: Config.httpUrl
 			});
 		});
 	});

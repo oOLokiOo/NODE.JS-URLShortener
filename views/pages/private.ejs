@@ -2,13 +2,13 @@
 
 <h1>User private link zone</h1>
 
-<% if (typeof UserUrl != "undefined") { %>
+<% if (typeof userUrl != "undefined") { %>
 
-<p>CREATED: <%= UserUrl["created"] %></p>
-<p><a href="<%= UserUrl["originalURL"] %>" target="_blank"><%= UserUrl["originalURL"] %></a></p>
+<p>CREATED: <%= userUrl["created"] %></p>
+<p><a href="<%= userUrl["originalURL"] %>" target="_blank"><%= userUrl["originalURL"] %></a></p>
 <p>
-	<a href="<%= HttpUrl %><%= UserUrl["shortUrlPublic"] %>" target="_blank"><%= HttpUrl %><%= UserUrl["shortUrlPublic"] %></a> 
-	<button class="btn" data-clipboard-text="<%= HttpUrl %><%= UserUrl["shortUrlPublic"] %>">copy</button>
+	<a href="<%= httpUrl %><%= userUrl["shortUrlPublic"] %>" target="_blank"><%= httpUrl %><%= userUrl["shortUrlPublic"] %></a> 
+	<button class="btn" data-clipboard-text="<%= httpUrl %><%= userUrl["shortUrlPublic"] %>">copy</button>
 </p>
 
 <br />
@@ -26,13 +26,13 @@
 		</tr>
 	</thead>
 	<tbody>
-	<% for (var i = 0; i < UserUrl.users.length; i++) { %>
+	<% for (var i = 0; i < userUrl.users.length; i++) { %>
 	<tr>
-		<td><%= UserUrl.users[i]["ip"] %></td>
-		<td><%= UserUrl.users[i]["os"] %></td>
-		<td><%= UserUrl.users[i]["browser"] %></td>
-		<td><%= UserUrl.users[i]["region"] %></td>
-		<td><%= UserUrl.users[i]["clicks"] %></td>
+		<td><%= userUrl.users[i]["ip"] %></td>
+		<td><%= userUrl.users[i]["os"] %></td>
+		<td><%= userUrl.users[i]["browser"] %></td>
+		<td><%= userUrl.users[i]["region"] %></td>
+		<td><%= userUrl.users[i]["clicks"] %></td>
 		</td>
 	</tr>
 	<% } %>

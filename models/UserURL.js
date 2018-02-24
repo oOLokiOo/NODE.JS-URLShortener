@@ -1,4 +1,4 @@
-var Ottoman = require("ottoman"),
+var	Ottoman = require("ottoman"),
 	Config  = require("../config");
 
 
@@ -8,6 +8,7 @@ var UserUrlModel = Ottoman.model("UserURL", {
 		shortUrlPublic:  {type: "string", default: ""},
 		shortUrlPrivate: {type: "string", default: ""},
 		created:         {type: "Date", default: Date.now},
+		userId:          {type: "integer"}, // for extended functionality
 		hash:            {type: "string", default: ""},
 		users: [{
 	        ip: {type: "string", default: ""},
@@ -39,23 +40,23 @@ UserUrlModel.dateToCustomFormat = function(UserUrl) {
 					+ UserUrl["created"].toLocaleTimeString();
 }
 
-UserUrlModel.getSumUrlClicks = function(AllUserUrls) {
-	for (let i = 0; i < AllUserUrls.length; i++) {
-		AllUserUrls[i]["clicksSum"] = 0;
+UserUrlModel.getSumUrlClicks = function(allUserUrls) {
+	for (let i = 0; i < allUserUrls.length; i++) {
+		allUserUrls[i]["clicksSum"] = 0;
 
-		for (let j = 0; j < AllUserUrls[i].users.length; j++) {
-			AllUserUrls[i]["clicksSum"] += AllUserUrls[i].users[j]["clicks"];
+		for (let j = 0; j < allUserUrls[i].users.length; j++) {
+			allUserUrls[i]["clicksSum"] += allUserUrls[i].users[j]["clicks"];
 		}
 	}
 
-	return AllUserUrls;
+	return allUserUrls;
 }
 
-UserUrlModel.checkIfUsersClicked = function(UserUrl, ip) {
+UserUrlModel.checkIfUsersClicked = function(userUrl, ip) {
 	let userId = false;
 
-	for (let i = 0; i < UserUrl.users.length; i++) {
-		if (UserUrl.users[i]["ip"] == ip) {
+	for (let i = 0; i < userUrl.users.length; i++) {
+		if (userUrl.users[i]["ip"] == ip) {
 			userId = i;
 			break;
 		}

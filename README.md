@@ -1,4 +1,6 @@
-# NODE.JS - URL Shortener
+# NODE.JS - URL Shortener (_test task_)
+
+*@author Ivan Volkov aka oOLokiOo <ivan.volkov.older@gmail.com>*
 
 
 * **node.js** - core
@@ -19,6 +21,3 @@ http://joxi.ru/Dr8KWMjtka8gaA - private url in details (with click)<br />
 http://joxi.ru/D2PjVLGTdP5Pkr - "copy url" functional<br />
 http://joxi.ru/Y2Ljp5BTnP55Gr - db buckets list<br />
 http://joxi.ru/Y2Ljp5BTnP5PGr - db bucket in details<br />
-
-
-_TODO: add description here..._
